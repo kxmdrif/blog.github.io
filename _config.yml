@@ -105,4 +105,4 @@ theme: butterfly
 deploy:
   type: git
   repository: https://github.com/kxmdrif/blog.github.io
-  branch: gh-pages
+  branch: master
