@@ -393,26 +393,26 @@ public class Sort {
 非交换节点的值, 而是每次把最小的节点添加在已排好序部分的尾部
 */
 public ListNode selectionSortList(ListNode head) {
-        ListNode dummy = new ListNode(0);
-        dummy.next = head;
-        //已排好序部分的尾部
-        ListNode tail = dummy;
-        while(tail.next != null){
-            ListNode min = tail;
-            ListNode t = tail;
-            while(t.next != null){
-                if (t.next.val < min.next.val)
-                    min = t;
-                t = t.next;
-            }
-            t = min.next;
-            min.next = min.next.next;
-            t.next = tail.next;
-            tail.next = t;
-            tail = tail.next;
+    ListNode dummy = new ListNode(0);
+    dummy.next = head;
+    //已排好序部分的尾部
+    ListNode tail = dummy;
+    while(tail.next != null){
+        ListNode min = tail;
+        ListNode t = tail;
+        while(t.next != null){
+            if (t.next.val < min.next.val)
+                min = t;
+            t = t.next;
         }
-        return dummy.next;
+        t = min.next;
+        min.next = min.next.next;
+        t.next = tail.next;
+        tail.next = t;
+        tail = tail.next;
     }
+    return dummy.next;
+}
 
 /**插入排序
 注意：每遍历一个节点时，前面已经排好序的节点链表和该节点没有相连
@@ -421,54 +421,54 @@ public ListNode selectionSortList(ListNode head) {
 除非上次位置的值大于当前值，此时重置开始查找位置为dummy
 */
 public ListNode insertionSortList(ListNode head) {
-        ListNode dummy = new ListNode(0);
-        ListNode cur = head;
-        ListNode target = dummy;
-        while(cur != null){
-            if (target.val > cur.val)
-                target = dummy;
-            ListNode next = cur.next;
-            while(target.next != null && target.next.val < cur.val)
-                target = target.next;
-            cur.next = target.next;
-            target.next = cur;
-            cur = next;
-        }
-        return dummy.next;
-
+    ListNode dummy = new ListNode(0);
+    ListNode cur = head;
+    ListNode target = dummy;
+    while(cur != null){
+        if (target.val > cur.val)
+            target = dummy;
+        ListNode next = cur.next;
+        while(target.next != null && target.next.val < cur.val)
+            target = target.next;
+        cur.next = target.next;
+        target.next = cur;
+        cur = next;
+    }
+    return dummy.next;
+}
 /**归并排序
 注意尽量分均匀否则会出现无限递归(例如如1->2分成1->2和null, 1->2一直递归)
 */
 public ListNode mergeSortList(ListNode head) {
-        if (head == null || head.next == null) return head;
-        ListNode fast = head, slow = head, prev = null;
-        while(fast != null && fast.next != null){
-            prev = slow;
-            fast = fast.next.next;
-            slow = slow.next;
-            
-        }
-        ListNode l1 = head, l2 = prev.next;
-        prev.next = null;
-        l1 = sortList(l1);
-        l2 = sortList(l2);
-        return merge(l1, l2);
+    if (head == null || head.next == null) return head;
+    ListNode fast = head, slow = head, prev = null;
+    while(fast != null && fast.next != null){
+        prev = slow;
+        fast = fast.next.next;
+        slow = slow.next;
+        
     }
+    ListNode l1 = head, l2 = prev.next;
+    prev.next = null;
+    l1 = sortList(l1);
+    l2 = sortList(l2);
+    return merge(l1, l2);
+}
     
-    private ListNode merge(ListNode l1, ListNode l2){
-        ListNode res = new ListNode(0);
-        ListNode head = res;
-        while(l1 != null && l2 != null){
-            if (l1.val < l2.val){
-                head.next = l1;
-                l1 = l1.next;
-            }else{
-                head.next = l2;
-                l2 = l2.next;
-            }
-            head = head.next;
+private ListNode merge(ListNode l1, ListNode l2){
+    ListNode res = new ListNode(0);
+    ListNode head = res;
+    while(l1 != null && l2 != null){
+        if (l1.val < l2.val){
+            head.next = l1;
+            l1 = l1.next;
+        }else{
+            head.next = l2;
+            l2 = l2.next;
         }
-        head.next = l1 == null ? l2 : l1;
-        return res.next;
+        head = head.next;
     }
+    head.next = l1 == null ? l2 : l1;
+    return res.next;
+}
 ```
