@@ -381,7 +381,7 @@ public class Sort {
 | 选择排序 | O(n^2)           | O(n^2)           | O(n^2)           | O(1)       | 不稳定 |
 | 堆排序   | O(nlogn)         | O(nlogn)         | O(nlogn)         | O(1)       | 不稳定 |
 | 冒泡排序 | O(n^2)           | O(n^2)           | O(n)             | O(1)       | 稳定   |
-| 快速排序 | O(nlogn)         | O(nlogn)         | O(nlogn)         | O(logn)    | 不稳定 |
+| 快速排序 | O(nlogn)         | O(n^2)           | O(nlogn)         | O(logn)    | 不稳定 |
 | 归并排序 | O(nlogn)         | O(nlogn)         | O(nlogn)         | O(n)       | 稳定   |
 | 计数排序 | O(n + k)         | O(n + k)         | O(n + k)         | O(n + k)   | 稳定   |
 | 桶排序   | O(n + k)         | O(n^2)           | O(n)             | O(n + k)   | 稳定   |
