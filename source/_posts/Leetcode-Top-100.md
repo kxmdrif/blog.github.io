@@ -1,6 +1,7 @@
 ---
-title: Leetcode Top 100 Liked Questions Summary
+title: Leetcode Top 100
 date: 2020-08-26 13:09:15
+description: Leetcode Top 100 Liked Questions Summary
 categories: Algorithms
 tags: Algorithms
 ---
