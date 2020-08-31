@@ -2592,6 +2592,26 @@ class Solution {
 }
 ```
 
+Approach2: Bottom-up DP
+
+- Time complexity: O(n)
+- Space complexity: O(n)
+
+```java
+class Solution {
+    public int rob(int[] nums) {
+        //dp[i] = max(dp[i - 1], dp[i - 2] + nums[i])
+        int prev2 = 0, prev1 = 0;
+        for(int num : nums){
+            int cur = Math.max(prev1, prev2 + num);
+            prev2 = prev1;
+            prev1 = cur;
+        }
+        return prev1;
+    }
+}
+```
+
 ## 200. Number of Islands
 **solution**
 Approach: DFS
