@@ -143,62 +143,52 @@ int right_bound(int[] nums, int target) {
 
 ## 3. KMP算法
 
-```c 
-int KmpSearch(char* s, char* p)
-{
-	int i = 0;
-	int j = 0;
-	int sLen = strlen(s);
-	int pLen = strlen(p);
-	while (i < sLen && j < pLen)
-	{
-		//①如果j = -1，或者当前字符匹配成功（即S[i] == P[j]），都令i++，j++    
-		if (j == -1 || s[i] == p[j])
-		{
-			i++;
-			j++;
-		}
-		else
-		{
-			//②如果j != -1，且当前字符匹配失败（即S[i] != P[j]），则令 i 不变，j = next[j]    
-			//next[j]即为j所对应的next值      
-			j = next[j];
-		}
-	}
-	if (j == pLen)
-		return i - j;
-	else
-		return -1;
+```java
+public class KMP {
+    public int indexOf(String source, String pattern) {
+        int i = 0, j = 0;
+        char[] src = source.toCharArray();
+        char[] ptn = pattern.toCharArray();
+        int sLen = src.length;
+        int pLen = ptn.length;
+        int[] next = getNext(ptn);
+        while (i < sLen && j < pLen) {
+            // 如果j = -1,或者当前字符匹配成功(src[i] = ptn[j]),都让i++,j++
+            if (j == -1 || src[i] == ptn[j]) {
+                i++;
+                j++;
+            } else {
+                // 如果j!=-1且当前字符匹配失败,则令i不变,j=next[j],即让pattern模式串右移j-next[j]个单位
+                j = next[j];
+            }
+        }
+        if (j == pLen)
+            return i - j;
+        return -1;
+    }
+    public int[] getNext(char[] p) {
+        // 已知next[j] = k,利用递归的思想求出next[j+1]的值
+        // 如果已知next[j] = k,如何求出next[j+1]呢?具体算法如下:
+        // 1. 如果p[j] = p[k], 则next[j+1] = next[k] + 1;
+        // 2. 如果p[j] != p[k], 则令k=next[k],如果此时p[j]==p[k],则next[j+1]=k+1,
+        // 如果不相等,则继续递归前缀索引,令 k=next[k],继续判断,直至k=-1(即k=next[0])或者p[j]=p[k]为止
+        int pLen = p.length;
+        int[] next = new int[pLen];
+        int k = -1;
+        int j = 0;
+        next[0] = -1; // next数组中next[0]为-1
+        while (j < pLen - 1) {
+            if (k == -1 || p[j] == p[k]) {
+                k++;
+                j++;
+                next[j] = k;
+            } else {
+                k = next[k];
+            }
+        }
+        return next;
+    }
 }
-
-/*
-从模式字符串的第一位(注意，不包括第0位)开始对自身进行匹配运算。 
-在任一位置，能匹配的最长长度就是当前位置的next值。如：
-abababca  (j = 1开始)
- abababca　(k = 0开始)
-*/
-void GetNext(char* p,int next[])
-{
-	int pLen = strlen(p);
-	next[0] = -1;
-	int k = -1;
-	int j = 0;
-	while (j < pLen - 1)
-	{
-		//p[k]表示前缀，p[j]表示后缀
-		if (k == -1 || p[j] == p[k]) 
-		{
-			++k;
-			++j;
-			next[j] = k;
-		}
-		else 
-		{
-			k = next[k];
-		}
-	}
-}
-
 ```
 
 ## 4. 快速排序
