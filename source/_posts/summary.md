@@ -343,7 +343,8 @@ public class Sort {
         
         //将记录由小到大地放进temp数组
         while(i <= mid && j <= high){
-            if(arr[i] < arr[j])
+            //arr[i] <= arr[j] : 保证稳定性
+            if(arr[i] <= arr[j])
                 temp[k++] = arr[i++];
             else
                 temp[k++] = arr[j++];
