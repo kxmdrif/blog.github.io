@@ -55,6 +55,7 @@ class SegmentTree {
         i += n;
         tree[i] = val;
         while(i > 1) {
+            //if i = 2k, then i ^ 1 = 2k + 1; if i = 2k + 1, i ^ 1 = 2k.
             tree[i >> 1] = tree[i] + tree[i ^ 1];
             i >>= 1;
         }

@@ -274,15 +274,15 @@ public class HeapSort {
      * @param arr
      * @param i
      * @param length
-     * [i, length)
+     * [i, j)
      */
-    public static void adjustHeap(int []arr,int i,int length){
+    public static void adjustHeap(int[] arr, int i, int j){
         int temp = arr[i];//先取出当前元素i
-        for(int k=i*2+1;k<length;k=k*2+1){//从i结点的左子结点开始，也就是2i+1处开始
-            if(k+1<length && arr[k]<arr[k+1]){//如果左子结点小于右子结点，k指向右子结点
+        for(int k = 2 * i + 1; k < j;k = 2 * k + 1){//从i结点的左子结点开始，也就是2i+1处开始
+            if(k + 1 < j && arr[k] < arr[k + 1]){//如果左子结点小于右子结点，k指向右子结点
                 k++;
             }
-            if(arr[k] >temp){//如果子节点大于父节点，将子节点值赋给父节点（不用进行交换）
+            if(arr[k] > temp){//如果子节点大于父节点，将子节点值赋给父节点（不用进行交换）
                 arr[i] = arr[k];
                 i = k;
             }else{
@@ -313,55 +313,43 @@ public class HeapSort {
 
 ```java
 public class Sort {
-
-    public static void MergeSort(int[] arr, int low, int high)
-    {
-        //使用递归的方式进行归并排序，所需要的空间复杂度是O（N+logN）
-        int mid = (low + high)/2;
-        if(low < high)
-        {
-            //递归地对左右两边进行排序
-            MergeSort(arr, low, mid);
-            MergeSort(arr, mid+1, high);
-            //合并
-            merge(arr, low, mid, high);
+    public void mergeSort(int[] nums) {
+        mergeSort(nums, 0, nums.length - 1);
+    }
+    public void mergeSortIter(int[] nums) {
+        int len = 1;
+        while (len <= nums.length) {
+            for (int i = 0; i + len <= nums.length; i += 2 * len) {
+                int l = i, mid = i + len - 1, r = i + 2 * len - 1;
+                if (r >= nums.length)
+                    r = nums.length - 1;
+                merge(nums, l, mid, r);
+            }
+            len = 2 * len;
         }
     }
-    
-    //merge函数实际上是将两个有序数组合并成一个有序数组
-    //因为数组有序，合并很简单，只要维护几个指针就可以了
-    private static void merge(int[] arr, int low, int mid, int high)
-    {
-        //temp数组用于暂存合并的结果
-        int[] temp = new int[high - low + 1];
-        //左半边的指针
-        int i = low;
-        //右半边的指针
-        int j = mid+1;
-        //合并后数组的指针
-        int k = 0;
-        
-        //将记录由小到大地放进temp数组
-        while(i <= mid && j <= high){
-            //arr[i] <= arr[j] : 保证稳定性
-            if(arr[i] <= arr[j])
-                temp[k++] = arr[i++];
+    private void mergeSort(int[] nums, int i, int j) {
+        if (i >= j) return;
+        int mid = i + ((j - i) >> 1);
+        mergeSort(nums, i, mid);
+        mergeSort(nums, mid + 1, j);
+        merge(nums, i, mid, j);
+    }
+    private void merge(int[] nums, int i, int mid, int j) {
+        int[] tmp = new int[j - i + 1];
+        int pi = i, pj = mid + 1, p = 0;
+        while (pi <= mid && pj <= j) 
+            //稳定排序
+            if (nums[pi] <= nums[pj])
+                tmp[p++] = nums[pi++];
             else
-                temp[k++] = arr[j++];
+                tmp[p++] = nums[pj++];
         }
-        
-        //接下来两个while循环是为了将剩余的（比另一边多出来的个数）放到temp数组中
-        while(i <= mid)
-            temp[k++] = arr[i++];
-        
-        while(j <= high)
-            temp[k++] = arr[j++];
-        
-        //将temp数组中的元素写入到待排数组中
-        for(int l = 0; l < temp.length; l++)
-            arr[low + l] = temp[l];
+        while (pi <= mid) tmp[p++] = nums[pi++];
+        while (pj <= j) tmp[p++] = nums[pj++];
+        for (int k = i; k <= j; k++)
+            nums[k] = tmp[k - i];
     }
-    
 }
 ```
 
@@ -465,3 +453,78 @@ private ListNode merge(ListNode l1, ListNode l2){
     return res.next;
 }
 ```
+
+## 9. 最大堆
+
+```java
+public class MaxHeap {
+    private int[] heap;
+    private int size;
+    private int capacity;
+    public MaxHeap(int capacity) {
+        this.size = 0;
+        this.capacity = capacity;
+        this.heap = new int[capacity];
+    }
+
+    public void resize() {
+        capacity = 2 * capacity;
+        int[] newHeap = new int[capacity];
+        for (int i = 0; i < size; i++) {
+            newHeap[i] = heap[i];
+        }
+        heap = newHeap;
+    }
+
+    public void push(int val) {
+        if (size == capacity) {
+            resize();
+        }
+        heap[size] = val;
+        size++;
+        shiftUp(size - 1);
+
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public int pop() {
+        if (isEmpty()) throw new RuntimeException("Heap is empty!");
+        int val = heap[0];
+        heap[0] = heap[size - 1];
+        size--;
+        shiftDown(0);
+        return val;
+    }
+
+    private void shiftUp(int i) {
+        int tmp = heap[i];
+        //note: use condition i > 0 here, if use i >= 0, will cause infinite loop.
+        while (i > 0 && tmp > heap[(i - 1) / 2]) {
+            heap[i] = heap[(i - 1) / 2];
+            i = (i - 1) / 2;
+        }
+        heap[i] = tmp;
+    }
+
+    private void shiftDown(int i) {
+        int tmp = heap[i];
+        //double pointers, i is the parent of k
+        for (int k = 2 * i + 1; k < size; k = 2 * k + 1) {
+            if (k + 1 < size && heap[k + 1] > heap[k]) k++;
+            if (tmp >= heap[k]) break;
+            heap[i] = heap[k];
+            i = k;
+        }
+        heap[i] = tmp;
+    }
+}
+
+```
+
